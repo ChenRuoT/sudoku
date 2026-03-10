@@ -11,6 +11,7 @@ export default function App() {
   const [solution, setSolution] = useState<Board>([]);
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
   const [isSolved, setIsSolved] = useState(false);
+  const [lastCorrectCell, setLastCorrectCell] = useState<[number, number] | null>(null);
 
   const startNewGame = useCallback(() => {
     const { puzzle: newPuzzle, solution: newSolution } = generateSudoku(difficulty);
@@ -51,8 +52,13 @@ export default function App() {
     newBoard[row][col] = num;
     setBoard(newBoard);
 
+    if (num !== BLANK && solution.length > 0 && num === solution[row][col]) {
+      setLastCorrectCell([row, col]);
+      setTimeout(() => setLastCorrectCell(null), 300);
+    }
+
     checkWin(newBoard);
-  }, [board, puzzle, selectedCell, isSolved, checkWin]);
+  }, [board, puzzle, selectedCell, isSolved, checkWin, solution]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isSolved) return;
@@ -121,6 +127,10 @@ export default function App() {
       classes += "text-red-500 ";
     } else {
       classes += "text-indigo-600 ";
+    }
+
+    if (lastCorrectCell && lastCorrectCell[0] === row && lastCorrectCell[1] === col) {
+      classes += "animate-shake ";
     }
 
     return classes;
