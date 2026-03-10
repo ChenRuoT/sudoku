@@ -1,0 +1,5 @@
+{
+  "name": "Sudoku",
+  "description": "A randomly generated and playable Sudoku game with multiple difficulty levels.",
+  "requestFramePermissions": []
+}
